@@ -1,83 +1,82 @@
 @charset "utf-8";
 /* CSS Document */
 
-#container {
-	height: 800px;
-	position:fixed;
+#publishMessageBtn {
+    margin: auto 0;
+}
+
+.leftAlignContents {
+    text-align: left;
+}
+
+.buttonz {
+    padding-top: 122px;
+}
+
+ul {
+    list-style-type: none;
+    max-height: 200px;
+    overflow: auto;
+    padding: 0;
+}
+
+p#startModalError {
+    float: left;
+}
+
+#letterRow {
+    padding-top: 50px;
+}
+
+#letterRow div {
+    margin-left: 60px;
+}
+
+#letterRow div button {
+    width: 90px;
+    height: 100px;
+}
+
+.wordAreaCol {
+    margin-bottom: 25px;
+    font-size: 30px;
+}
+
+.centerAlignContents, .wordAreaCol {
+    text-align: center;
 }
 
 div#start {
-	z-index: 18;	
+	z-index: 1;
+    position: absolute;	
 	height: 850px;
-	position: absolute;
 	background-color: #00FF8C;
-	width: 100%;
 }
 
 #letterDisplay {
-	position: relative;
 	background-color: #01ACFF;
 	height: 200px; /*200px*/
-	margin: 0 auto;
 }
 
 #wordArea {
 	overflow: auto;
-	height: 400px;
-	width: 100%;
+    min-height: 50px;
+	max-height: 200px;
 	text-align: center;
 }
 
 #submitDiv {
 	background-color: #01ACFF;
-	height: 250px;
-	margin: 0 auto;	
+	min-height: 250px;
 }
 
-#chatDiv {
-	position: fixed;
-	height: 200px;
-	z-index: 2;	
-}
-
-ul#notificationList li{
-	display: list-item !important;
-	text-align: left;
-}
-
-table {
-	width: 100%;
-	height: 100%;
-	table-layout: fixed;
-}
-
-table tr {
-	width: 100%;	
-}
-
-table tr td {
-	size: auto;
-}
-
-table tr td p{
-	font: 25px/1 "Comic Sans MS", Verdana, sans-serif;
+p {
+	font: 20px "Comic Sans MS", Verdana, sans-serif;
 	text-transform: uppercase;
-}
-
-#confirmBtn {
-	height: 75px;
-	width: 200px;	
-}
-
-#checkDiv {
-	padding-top: 25px;
-	text-align: center;
-	size: auto;	
 }
 
 p#word {
-	font: 30px/1 "Comic Sans MS", Verdana, sans-serif;
-	text-transform: uppercase;
+	font-size: 30px;
 }
 
 p#word:hover {
@@ -85,62 +84,26 @@ p#word:hover {
 	cursor: pointer;
 }
 
-p#error {
+p#error, p#startModalError {
+    font-size: 15px;
 	color: #E74C3C;	
 	transition: all 0.1s;
 	-moz-transition: all 0.1s;
 	-webkit-transition: all 0.1s;
 }
 
-div ul li p {
-	font: 25px/1 "Comic Sans MS", Verdana, sans-serif;
-	text-transform: uppercase;
-}
-
-button {
-	font: 36px/1 "Comic Sans MS", Verdana, sans-serif;
-	color: #FFF;
-	width: 75px;
-	height: 75px;
-  	text-transform: uppercase;
-  	border-radius: 4px;
-  	background-color: #F2CF66;
-	text-shadow: 0px -2px #2980B9;
+.btn {
+    font-family: "Comic Sans MS", Verdana, sans-serif;
+    font-size: 28px;
 	transition: all 0.1s;
 	-moz-transition: all 0.1s;
 	-webkit-transition: all 0.1s;
 }
 
-button#enterGame {
-	width: auto;	
+.btn-ltr {
+    font-size: 40px;
 }
 
-button:hover {
-	background-color: #E74C3C;
-	cursor: pointer;
-}
-
-button:active {
-	-webkit-transform: translate(0px,5px);
-  	-moz-transform: translate(0px,5px);
-	transform: translate(0px,5px);
-	border-bottom: 1px solid;
-}
-
-ul {
-	list-style-type: none;
-	text-align: center;
-}
-
-ul#consanantUl {
-	padding-top: 25px;
-}
-
-ul#vowelUl {
-	vertical-align: bottom;
-}
-
-#consonantUl li, #vowelUl li{
-    display: inline;
-    padding-right: 200px;
+.btn:focus {
+    outline: none;
 }
