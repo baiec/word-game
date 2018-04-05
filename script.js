@@ -18,8 +18,6 @@ var pubnub = PUBNUB.init({
     $("#startModal").modal({keyboard:false,backdrop:"static"}); //removes ability to close modal
     $("#startModal").modal("show");
 }());
-
-
 //arrays
 var consonantArray = ["b","c","d","f","g","h","j","k","l","m","n","p","r","s","t","v","w","y"];
 var vowelArray = ["a","e","i","o","u"];
@@ -57,7 +55,7 @@ var words = []; //user's words after clicking endgame, used to display them
 function pubChatMsg(){
     "use strict";
     if(chatInput.val().trim() !== ''){ //checks if blank or only containing whitespace
-        pub("testChannel5",$("#usernameInput").val() + ": " +chatInput.val());
+        pub(channel, username + ": " +chatInput.val());
         chatInput.val(''); 
     }
 }
@@ -103,7 +101,7 @@ function decideWinner(player){
 	scores.push(player);
     listWords(player);
 	pubnub.here_now({
-		channel: "testChannel5",
+		channel: channel,
 		callback: function(m){
 			if(scores.length === m.occupancy){
                 var letters = [];
@@ -174,6 +172,16 @@ function putWordsIntoArray(){
 	return array;
 }
 
+/*
+	Handles the channel
+	m[0] = username m[1] = channelname
+	void
+*/
+
+function start(m){
+
+}
+
 
 /*
 	Handles all pubnub presence related events, such as joining and state-changing (starting/ending games)
@@ -186,14 +194,14 @@ function presence(m){
 	if(m.action === "join"){
 		if(uuid === m.uuid){ //only will run for the user who joined
 			pubnub.here_now({
-				channel: "testChannel5",
+				channel: channel,
 				state: true,
 				callback: function(m){
 					var p = m.uuids;
 					if(p[0].state.inGame && p[0].uuid !== uuid){
 						throw new Error('This is not an error. This is just to abort javascript');
 						/*pubnub.unsubscribe({
-							channel: "testChannel5",
+							channel: channel,
 							callback: alert("Game is in progress, you have been kicked, please refresh when game is finished")
 						});*/
 					}
@@ -208,7 +216,7 @@ function presence(m){
 			inLobby = false;
             $("#wordArea").empty();
 			pubnub.state({
-				channel: "testChannel5",
+				channel: channel,
 				state: {
 					inGame: true
 				},
@@ -218,13 +226,13 @@ function presence(m){
 		else if(!m.data.inGame && !inLobby){
 			inLobby = true;
 			pubnub.state({
-				channel: "testChannel5",
+				channel: channel,
 				state: {
 					inGame: false
 				},
 				callback: function(m){console.log(m.inGame);}
 			});
-			pub("endGameChannel",[$("#usernameInput").val(),getLetterAmount(),words]);
+			pub(channel + "endGameChannel",[username,getLetterAmount(),words]);
 		}
 	}
 	noOfPlayers.html(m.occupancy + (m.occupancy === 1 ? " player" : " players"));	
@@ -333,34 +341,6 @@ function realWord(){
 
 // event handlers
 
-/*
-    If join button is clicked and username isnt blank, hide modal
-    n/a
-    void
-*/
-enterLobby.click(function(){
-    "use strict";
-    if($("#usernameInput").val().trim() !== ""){
-        $("#startModal").modal("hide");
-    } else {
-        $("#startModalError").text("Username is blank.");
-    }
-});
-
-
-/*
-    If enter key is clicked and username isnt blank, hide modal
-    n/a
-    void
-*/
-$("#usernameInput").keypress(function(key){
-   "use strict";
-   if(key.which === 13){
-       enterLobby.click();   
-   }
-});
-
-
 /* 
 	Will generate letters and change state to ingame
 	No parameters
@@ -373,9 +353,9 @@ startGame.click(function(){
     $("#wordArea").empty();
 	inLobby = false;
 	//start timer
-	pub("letters",[vowels, consonants]);
+	pub(channel + "letters",[vowels, consonants]);
 	pubnub.state({
-		channel: "testChannel5",
+		channel: channel,
 		state: {
 			inGame: true
 		},
@@ -396,27 +376,14 @@ endGame.click(function(){ //will make all players end game
     
 	inLobby = true;
 	pubnub.state({
-		channel: "testChannel5",
+		channel: channel,
 		state: {
 			inGame: false
 		},
 		callback: function(m){console.log(m.inGame);}
 	});
-	pub("endGameChannel",[$("#usernameInput").val(),getLetterAmount(),words]); //[username,integer,[words]]
+	pub(channel + "endGameChannel",[username,getLetterAmount(),words]); //[username,integer,[words]]
     submittedWordsArray.length = 0;
-});
-
-
-/*
-	Will hide the username div
-	n/a
-	void
-*/
-
-enterLobby.click(function(){
-	"use strict";
-	//testChannel3
-	startDiv.css("display", "none");
 });
 
 
@@ -504,7 +471,7 @@ chatBtn.click(function(){
 });
 
 pubnub.subscribe({
-	channel: "testChannel5",
+	channel: channel,
 	presence: presence,
 	message: handleMessage,
 	state: {
@@ -514,14 +481,19 @@ pubnub.subscribe({
 
 
 pubnub.subscribe({
-	channel: "letters",
+	channel: channel + "letters",
 	message: handleLetters
 }); //for handling start of game
 
 
 pubnub.subscribe({
-	channel: "endGameChannel",
+	channel: channel + "endGameChannel",
 	message: decideWinner
+});
+
+pubnub.subscribe({
+	channel: "start",
+	message: start
 });
 
 
